@@ -26,7 +26,7 @@ public class CuisineTypeController {
     public void saveCuisineType(@RequestBody CuisineType cuisineType) {
         cuisineTypeService.saveCuisineType(cuisineType);
     }
-    
+
     @DeleteMapping("/{id}")
     public void deleteCuisineTypeById(@PathVariable int id) {
         cuisineTypeService.deleteCuisineTypeById(id);

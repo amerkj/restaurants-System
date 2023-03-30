@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -53,4 +54,17 @@ public class RestaurantController {
         List<Restaurant> featuredRestaurants = restaurantService.getFeaturedRestaurants();
         return new ResponseEntity<>(featuredRestaurants, HttpStatus.OK);
     }
+    @PostMapping("/search")
+    public ResponseEntity<List<Restaurant>> searchRestaurants(@RequestBody Map<String, String> requestBody) {
+        String query = requestBody.get("query");
+        List<Restaurant> restaurants = restaurantService.searchRestaurants(query);
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);
+    }
+    @PostMapping("/filter")
+    public ResponseEntity<List<Restaurant>> filterRestaurants(@RequestBody RestaurantFilterDto filter) {
+        List<Restaurant> restaurants = restaurantService.filterRestaurants(filter);
+        return ResponseEntity.ok(restaurants);
+    }
+
 }
+
