@@ -1,6 +1,10 @@
 package com.example.demo.cuisinetype;
 
+import com.example.demo.restaurant.Restaurant;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "cuisine_types")
@@ -16,6 +20,9 @@ public class CuisineType {
     @Column(name = "image", nullable = false)
     private String image;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cuisineType")
+    @JsonManagedReference
+    private List<Restaurant> restaurants;
     public CuisineType() {}
 
     public CuisineType(String name, String image) {
@@ -49,4 +56,11 @@ public class CuisineType {
         this.image = image;
     }
 
+    public List<Restaurant> getRestaurants() {
+        return restaurants;
+    }
+
+    public void setRestaurants(List<Restaurant> restaurants) {
+        this.restaurants = restaurants;
+    }
 }

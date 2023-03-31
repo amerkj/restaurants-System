@@ -2,6 +2,7 @@ package com.example.demo.restaurant;
 import javax.persistence.*;
 
 import com.example.demo.cuisinetype.CuisineType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "restaurants")
@@ -33,6 +34,7 @@ public class Restaurant {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cuisine_type_id")
+    @JsonBackReference
     private CuisineType cuisineType;
 
     public Restaurant() {

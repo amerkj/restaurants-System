@@ -1,5 +1,6 @@
 package com.example.demo.restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
+    @Cacheable(value = "restaurants")
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
     }
@@ -34,6 +36,7 @@ public class RestaurantService {
         }
         return false;
     }
+
 
     public List<Restaurant> getFeaturedRestaurants() {
         return restaurantRepository.findFeaturedRestaurants();
