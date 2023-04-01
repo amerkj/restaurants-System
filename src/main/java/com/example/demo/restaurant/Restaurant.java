@@ -1,8 +1,12 @@
 package com.example.demo.restaurant;
 import javax.persistence.*;
 
+import com.example.demo.advertisement.Advertisement;
 import com.example.demo.cuisinetype.CuisineType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.List;
 
 @Entity
 @Table(name = "restaurants")
@@ -32,7 +36,11 @@ public class Restaurant {
     @Column(nullable = false)
     private Boolean featured = false;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Advertisement> advertisements;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cuisine_type_id")
     @JsonBackReference
     private CuisineType cuisineType;

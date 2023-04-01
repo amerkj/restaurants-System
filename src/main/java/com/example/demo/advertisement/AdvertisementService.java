@@ -1,6 +1,10 @@
 package com.example.demo.advertisement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,20 +17,24 @@ public class AdvertisementService {
     @Autowired
     private AdvertisementRepository adRepo;
 
-//    public Advertisement saveAdvertisement(Advertisement ad) {
-//        return adRepo.save(ad);
-//    }
-//
-//    public List<Advertisement> getAllAdvertisements() {
-//        return adRepo.findAll();
-//    }
-//
-//    public Advertisement getAdvertisementById(Long id) {
-//        return adRepo.findById(id)
-//                .orElseThrow(() -> new NoSuchElementException("Advertisement not found with id " + id));
-//    }
+    @CacheEvict(value = "advertisement", allEntries = true)
 
-    public List<Advertisement> getAdvertisementsByVenueId(Long restaurant_id) {
-        return adRepo.findByRestaurantId(restaurant_id);
+    public Advertisement saveAdvertisement(Advertisement ad) {
+        return adRepo.save(ad);
+    }
+    
+    @Cacheable(value = "advertisement")
+
+    public List<Advertisement> getAllAdvertisements() {
+        return adRepo.findAll();
+    }
+
+    public Advertisement getAdvertisementById(Long id) {
+        return adRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Advertisement not found with id " + id));
+    }
+
+    public Page<Advertisement> getAdvertisementsByVenueId(Long restaurantId, Pageable pageable) {
+        return adRepo.findByRestaurantId(restaurantId, pageable);
     }
 }

@@ -1,5 +1,8 @@
 package com.example.demo.restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +19,10 @@ public class RestaurantController {
 
     // GET all restaurants
     @GetMapping
-    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+    public ResponseEntity<Page<Restaurant>> getAllRestaurants(@RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Restaurant> restaurants = restaurantService.getAllRestaurants(pageable);
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
@@ -50,8 +55,10 @@ public class RestaurantController {
 
     // GET restaurants where featured = true
     @GetMapping("/featured-categories")
-    public ResponseEntity<List<Restaurant>> getFeaturedRestaurants() {
-        List<Restaurant> featuredRestaurants = restaurantService.getFeaturedRestaurants();
+    public ResponseEntity<Page<Restaurant>> getFeaturedRestaurants(@RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Restaurant> featuredRestaurants = restaurantService.getFeaturedRestaurants(pageable);
         return new ResponseEntity<>(featuredRestaurants, HttpStatus.OK);
     }
     @PostMapping("/search")

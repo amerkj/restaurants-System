@@ -1,4 +1,6 @@
 package com.example.demo.restaurant;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -7,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long>{
     @Query("SELECT r FROM Restaurant r WHERE r.featured = true")
-    List<Restaurant> findFeaturedRestaurants();
+    Page<Restaurant> findFeaturedRestaurants(Pageable pageable);
+
     List<Restaurant> findByNameContainingIgnoreCase(String query);
 
     @Query("SELECT r FROM Restaurant r WHERE " +
@@ -16,7 +19,4 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long>{
             "(:cuisineTypeId IS NULL OR r.cuisineType.id = :cuisineTypeId)")
     List<Restaurant> findByFilters(@Param("name") String name, @Param("location") String location,
                                    @Param("cuisineTypeId") Long cuisineTypeId);
-
-
-
 }

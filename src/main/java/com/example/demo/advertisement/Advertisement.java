@@ -1,6 +1,8 @@
 package com.example.demo.advertisement;
 
+import com.example.demo.cuisinetype.CuisineType;
 import com.example.demo.restaurant.Restaurant;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
@@ -20,9 +22,16 @@ public class Advertisement {
     @Column(name = "image", nullable = false)
     private String image;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "restaurant_id", nullable = false)
+//    private Restaurant restaurant;
+//
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "restaurant_id")
+@JsonBackReference
+private Restaurant restaurant;
+
+
 
     public Advertisement() {}
 
