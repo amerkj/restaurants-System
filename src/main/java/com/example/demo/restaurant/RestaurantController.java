@@ -48,7 +48,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/add")
-    @ApiOperation(value = "Create restaurant", notes = "IT SHOULD BE LOGGED IN AND ,Creates a new restaurant")
+    @ApiOperation(value = "Create restaurant", notes = "IT SHOULD BE LOGGED IN ,Creates a new restaurant")
     public ResponseEntity<?> createRestaurant(@Valid @RequestBody Restaurant restaurant, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String error = bindingResult.getFieldErrors().stream()

@@ -2,7 +2,6 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -17,32 +16,9 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.example.demo"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
 }
-
-//
-//@EnableSwagger2
-//@Configuration
-//public class SwaggerConfig {
-//
-//    @Bean
-//    public Docket productApi() {
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .select()
-//                .apis(RequestHandlerSelectors.basePackage("com.example.demo"))
-//                .paths(regex("/.*"))
-//                .build();
-//    }
-//
-//
-//}
-
-//.apis(RequestHandlerSelectors.basePackage("com.example.demo.advertisement.AdvertisementController"))
-//                .apis(RequestHandlerSelectors.basePackage("com.example.demo.cuisinetype"))
-//                .apis(RequestHandlerSelectors.basePackage("com.example.demo.featured"))
-//                .apis(RequestHandlerSelectors.basePackage("com.example.demo.restaurant"))
-//                .apis(RequestHandlerSelectors.basePackage("com.example.demo.user"))
