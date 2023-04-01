@@ -8,8 +8,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long>{
-    @Query("SELECT r FROM Restaurant r WHERE r.featured = true")
-    Page<Restaurant> findFeaturedRestaurants(Pageable pageable);
+
+    Page<Restaurant> findByCuisineTypeId(Long id, Pageable pageable);
 
     List<Restaurant> findByNameContainingIgnoreCase(String query);
 

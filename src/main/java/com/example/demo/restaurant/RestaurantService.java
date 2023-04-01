@@ -20,33 +20,20 @@ public class RestaurantService {
     }
 
     @Cacheable(value = "restaurants")
-
     public Page<Restaurant> getAllRestaurants(Pageable pageable) {
         return restaurantRepository.findAll(pageable);
     }
 
-    public Restaurant getRestaurantById(Long id) {
-        return restaurantRepository.findById(id).orElse(null);
+    @Cacheable(value = "restaurantsbycosin")
+    public Page<Restaurant> getRestaurantsByCuisineTypeId(Long id, Pageable pageable) {
+        return restaurantRepository.findByCuisineTypeId(id, pageable);
     }
-    @CacheEvict(value = "restaurants", allEntries = true)
 
+    @CacheEvict(value = {"restaurants","restaurantsbycosin"}, allEntries = true)
     public Restaurant createRestaurant(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
     }
-    @CacheEvict(value = "restaurants", allEntries = true)
 
-    public boolean deleteRestaurantById(Long id) {
-        if (restaurantRepository.existsById(id)) {
-            restaurantRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-
-    public Page<Restaurant> getFeaturedRestaurants(Pageable pageable) {
-        return restaurantRepository.findFeaturedRestaurants(pageable);
-    }
     public List<Restaurant> searchRestaurants(String query) {
         // perform a database query to search for restaurants matching the query string
         List<Restaurant> matchingRestaurants = restaurantRepository.findByNameContainingIgnoreCase(query);
@@ -57,6 +44,7 @@ public class RestaurantService {
     public List<Restaurant> filterRestaurants(RestaurantFilterDto filterDto) {
         return restaurantRepository.findByFilters(filterDto.getName(), filterDto.getLocation(), filterDto.getCuisineTypeId());
     }
+
 
 
 }

@@ -26,12 +26,12 @@ public class CuisineTypeService {
         Optional<CuisineType> optionalCuisineType = cuisineTypeRepository.findById(id);
         return optionalCuisineType.orElse(null);
     }
-    @CacheEvict(value = "cuisine", allEntries = true)
+    @CacheEvict(value = {"cuisine","restaurantsbycosin"}, allEntries = true)
 
     public void saveCuisineType(CuisineType cuisineType) {
         cuisineTypeRepository.save(cuisineType);
     }
-    @CacheEvict(value = "cuisine", allEntries = true)
+    @CacheEvict(value = {"cuisine","restaurantsbycosin"}, allEntries = true)
 
     public void deleteCuisineTypeById(int id) {
         cuisineTypeRepository.deleteById(id);

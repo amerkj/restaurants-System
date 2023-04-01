@@ -18,11 +18,13 @@ public class AdvertisementController {
     private AdvertisementService adService;
 
 
-    @GetMapping
-    public List<Advertisement> getAllAdvertisements() {
-        return adService.getAllAdvertisements();
+    @GetMapping("ads")
+    public List<Advertisement> getAllAdvertisements(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Advertisement> advertisementPage = adService.getAllAdvertisements(pageable);
+        return advertisementPage.getContent();
     }
-
     @GetMapping("/{id}")
     public Advertisement getAdvertisementById(@PathVariable Long id) {
         return adService.getAdvertisementById(id);

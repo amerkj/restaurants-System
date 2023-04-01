@@ -25,8 +25,8 @@ public class AdvertisementService {
     
     @Cacheable(value = "advertisement")
 
-    public List<Advertisement> getAllAdvertisements() {
-        return adRepo.findAll();
+    public Page<Advertisement> getAllAdvertisements(Pageable pageable) {
+        return adRepo.findAll(pageable);
     }
 
     public Advertisement getAdvertisementById(Long id) {

@@ -1,14 +1,20 @@
 package com.example.demo.restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("restaurants")
@@ -17,8 +23,8 @@ public class RestaurantController {
     private RestaurantService restaurantService;
 
 
-    // GET all restaurants
-    @GetMapping
+
+    @GetMapping("/cuisine-type")
     public ResponseEntity<Page<Restaurant>> getAllRestaurants(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -26,41 +32,28 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
-    // GET restaurant by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable Long id) {
-        Restaurant restaurant = restaurantService.getRestaurantById(id);
-        if (restaurant == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    @GetMapping("/cuisine-type/{id}")
+    public ResponseEntity<Page<Restaurant>> getRestaurantsByCuisineTypeId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Restaurant> restaurants = restaurantService.getRestaurantsByCuisineTypeId(id, pageable);
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
-    // POST new restaurant
     @PostMapping("/add")
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<?> createRestaurant(@Valid @RequestBody Restaurant restaurant, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String error = bindingResult.getFieldErrors().stream()
+                    .map(fe -> fe.getField() + " " + fe.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(error);
+        }
         Restaurant createdRestaurant = restaurantService.createRestaurant(restaurant);
         return new ResponseEntity<>(createdRestaurant, HttpStatus.CREATED);
     }
 
-    // DELETE restaurant by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRestaurantById(@PathVariable Long id) {
-        boolean deleted = restaurantService.deleteRestaurantById(id);
-        if (!deleted) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    // GET restaurants where featured = true
-    @GetMapping("/featured-categories")
-    public ResponseEntity<Page<Restaurant>> getFeaturedRestaurants(@RequestParam(defaultValue = "0") int page,
-                                                                   @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Restaurant> featuredRestaurants = restaurantService.getFeaturedRestaurants(pageable);
-        return new ResponseEntity<>(featuredRestaurants, HttpStatus.OK);
-    }
     @PostMapping("/search")
     public ResponseEntity<List<Restaurant>> searchRestaurants(@RequestBody Map<String, String> requestBody) {
         String query = requestBody.get("query");
@@ -72,6 +65,8 @@ public class RestaurantController {
         List<Restaurant> restaurants = restaurantService.filterRestaurants(filter);
         return ResponseEntity.ok(restaurants);
     }
+
+
 
 }
 
