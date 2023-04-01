@@ -1,4 +1,7 @@
 package com.example.demo.restaurant;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -25,6 +28,7 @@ public class RestaurantController {
 
 
     @GetMapping("/cuisine-type")
+    @ApiOperation(value = "Get all restaurants", notes = "Returns a list of all restaurants")
     public ResponseEntity<Page<Restaurant>> getAllRestaurants(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -33,6 +37,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/cuisine-type/{id}")
+    @ApiOperation(value = "Get restaurants by cuisine type ID", notes = "Returns a list of restaurants by cuisine type ID")
     public ResponseEntity<Page<Restaurant>> getRestaurantsByCuisineTypeId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
@@ -43,6 +48,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/add")
+    @ApiOperation(value = "Create restaurant", notes = "IT SHOULD BE LOGGED IN AND ,Creates a new restaurant")
     public ResponseEntity<?> createRestaurant(@Valid @RequestBody Restaurant restaurant, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String error = bindingResult.getFieldErrors().stream()
@@ -55,12 +61,14 @@ public class RestaurantController {
     }
 
     @PostMapping("/search")
+    @ApiOperation(value = "Search restaurants", notes = "IT SHOULD BE LOGGED IN AND Returns a list of restaurants matching the provided query")
     public ResponseEntity<List<Restaurant>> searchRestaurants(@RequestBody Map<String, String> requestBody) {
         String query = requestBody.get("query");
         List<Restaurant> restaurants = restaurantService.searchRestaurants(query);
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
     @PostMapping("/filter")
+    @ApiOperation(value = "Filter restaurants", notes = "IT SHOULD BE LOGGED IN AND Returns a list of restaurants filtered by the provided criteria  ")
     public ResponseEntity<List<Restaurant>> filterRestaurants(@RequestBody RestaurantFilterDto filter) {
         List<Restaurant> restaurants = restaurantService.filterRestaurants(filter);
         return ResponseEntity.ok(restaurants);

@@ -1,5 +1,8 @@
 package com.example.demo.advertisement;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,22 +22,15 @@ public class AdvertisementController {
 
 
     @GetMapping("ads")
+    @ApiOperation(value = "Get all advertisements", notes = "Returns a paginated list of all advertisements")
     public List<Advertisement> getAllAdvertisements(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Advertisement> advertisementPage = adService.getAllAdvertisements(pageable);
         return advertisementPage.getContent();
     }
-    @GetMapping("/{id}")
-    public Advertisement getAdvertisementById(@PathVariable Long id) {
-        return adService.getAdvertisementById(id);
-    }
-
-    @PostMapping("/")
-    public Advertisement createAdvertisement(@RequestBody Advertisement ad) {
-        return adService.saveAdvertisement(ad);
-    }
-    @GetMapping("/{restaurantId}/ads")
+       @GetMapping("/{restaurantId}/ads")
+       @ApiOperation(value = "Get advertisements by restaurant ID", notes = "Returns a paginated list of advertisements by restaurant ID")
     public ResponseEntity<Page<Advertisement>> getAdvertisementsByVenueId(@PathVariable Long restaurantId,
                                                                           @RequestParam(defaultValue = "0") int page,
                                                                           @RequestParam(defaultValue = "10") int size) {

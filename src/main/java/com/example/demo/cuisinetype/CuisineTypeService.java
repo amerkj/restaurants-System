@@ -22,19 +22,5 @@ public class CuisineTypeService {
     public Page<CuisineType> getAllCuisineTypes(Pageable pageable) {
         return cuisineTypeRepository.findAll(pageable);
     }
-    public CuisineType getCuisineTypeById(int id) {
-        Optional<CuisineType> optionalCuisineType = cuisineTypeRepository.findById(id);
-        return optionalCuisineType.orElse(null);
-    }
-    @CacheEvict(value = {"cuisine","restaurantsbycosin"}, allEntries = true)
-
-    public void saveCuisineType(CuisineType cuisineType) {
-        cuisineTypeRepository.save(cuisineType);
-    }
-    @CacheEvict(value = {"cuisine","restaurantsbycosin"}, allEntries = true)
-
-    public void deleteCuisineTypeById(int id) {
-        cuisineTypeRepository.deleteById(id);
-    }
 
 }
